@@ -3,8 +3,13 @@ controller.js
 Handles app routes
 */
 
-const {getAuthorizeURL, authSpotify, addTracksToPlaylist, getTopTracks} =
-    require('./spotify-wrapper');
+const {
+  getAuthorizeURL,
+  authSpotify,
+  addTracksToPlaylist,
+  getTopTracks,
+  getRecommendations
+} = require('./spotify-wrapper');
 
 const loginController = (req, res) => {
   var authorizeURL = getAuthorizeURL();
@@ -35,7 +40,9 @@ const testController = async (req, res) => {
     console.error(err);
     return
   }
-  addTracksToPlaylist(playlistId, topTracks);
+  const recommendations = await getRecommendations(topTracks);
+  console.log(recommendations);
+  addTracksToPlaylist(playlistId, recommendations);
 };
 
 module.exports = {
