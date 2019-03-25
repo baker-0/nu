@@ -4,9 +4,10 @@ GOOD music generator.
 ## TODO
 
 ### Short term
-- Authenticate user with Spotify
-- Get recommendation based off track
-- Get recommendation based off playlist
-- Get general recommendations
+- Create User Abstraction
+  - User has access/refresh tokens
+  - Also has playlist ID of user's Nu playlist.
+    - If playlist ID invalid, create Nu playlist.
+- Check validity of access token on every call to the API. If expired, refresh.
 ### Long term
-- Discord bot to utilize Nu in finding nu music.
+- Deploy app on server, run regularly to generate recommendations.
