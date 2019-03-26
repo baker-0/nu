@@ -7,7 +7,8 @@ Uses spotify-wrapper to operate on user's spotify account
 const {
   getTopTracks,
   getRecommendations,
-  addTracksToPlaylist
+  addTracksToPlaylist,
+  getNuPlaylist
 } = require('./spotify-wrapper')
 
 /*
@@ -17,12 +18,13 @@ const {
  * @popularity: popularity of tracks
  */
 const generateTracks = ({ limit = 20, popularity = 100 } = {}) => {
-  const playlistId = '6XEJRHzghjdBwi2BCaLfhE'
   return new Promise(async (resolve, reject) => {
     var topTracks, recommendations, snapshot
     try {
       topTracks = await getTopTracks()
       recommendations = await getRecommendations(topTracks, limit, popularity)
+      const playlistId = await getNuPlaylist()
+      console.log('playlistId :', playlistId);
       snapshot = await addTracksToPlaylist(playlistId, recommendations)
       console.log('Added tracks to playlist!')
       resolve(snapshot)

@@ -56,13 +56,7 @@ const getTopTracks = () => {
       })
   })
 }
-/*
-Get traits of tracks
-*/
 
-const getFeatures = (tracks) => {
-  return spotifyApi.getAudioFeaturesForTracks(tracks)
-}
 /*
 Get recommendations based off tracks
 */
@@ -78,6 +72,27 @@ const getRecommendations = async (trackURIs, limit, popularity) => {
   return uris
 }
 
+/*
+ * Get ID of user's Nu playlist
+ * If playlist doesn't exist, create it and return ID.
+ */
+const getNuPlaylist = async () => {
+  try {
+    var userID = await spotifyApi.getMe()
+    userID = userID.body.id
+    const playlists = await spotifyApi.getUserPlaylists(userID)
+    var playlistData = playlists.body.items.filter(p => p.name === 'Nu')[0]
+    if (!playlistData) {
+      playlistData = await spotifyApi.createPlaylist(userID, 'Nu')
+      playlistData = playlistData.body
+      console.log('playlistData :', playlistData);
+    }
+    return playlistData.id
+  } catch (err) {
+    console.error("Couldn't get Nu playlist ID" + err)
+  }
+}
+
 const addTracksToPlaylist = (playlist, tracks) => {
   return spotifyApi.addTracksToPlaylist(playlist, tracks, { position: 0 })
 }
@@ -87,5 +102,6 @@ module.exports = {
   authCodeGrant,
   addTracksToPlaylist,
   getTopTracks,
-  getRecommendations
+  getRecommendations,
+  getNuPlaylist
 }
