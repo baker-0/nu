@@ -8,45 +8,32 @@ const {
   authSpotify,
   addTracksToPlaylist,
   getTopTracks,
-  getRecommendations
-} = require('./spotify-wrapper');
+  getRecommendations,
+  generateTracks
+} = require('./spotify-wrapper')
 
 const loginController = (req, res) => {
-  var authorizeURL = getAuthorizeURL();
+  var authorizeURL = getAuthorizeURL()
   res.redirect(authorizeURL)
-};
+}
 
 const authController = async (req, res) => {
   try {
     await authSpotify(req.query.code)
+    res.redirect('/test')
   } catch (err) {
     console.error(err)
     res.redirect('/')
-    return
   }
-  res.redirect('/test')
+}
 
-  console.log('Spotify authorized!')
-};
-
-const testController = async (req, res) => {
-  res.redirect('/');
-
-  const playlistId = '6XEJRHzghjdBwi2BCaLfhE';
-  var topTracks
-  try {
-    topTracks = await getTopTracks();
-  } catch (err) {
-    console.error(err);
-    return
-  }
-  const recommendations = await getRecommendations(topTracks);
-  console.log(recommendations);
-  addTracksToPlaylist(playlistId, recommendations);
-};
+const testController = (req, res) => {
+  res.redirect('/')
+  generateTracks(1, 10).catch(err => console.error(err))
+}
 
 module.exports = {
   loginController,
   authController,
   testController
-};
+}
