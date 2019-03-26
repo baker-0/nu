@@ -81,11 +81,10 @@ const getNuPlaylist = async () => {
     var userID = await spotifyApi.getMe()
     userID = userID.body.id
     const playlists = await spotifyApi.getUserPlaylists(userID)
-    var playlistData = playlists.body.items.filter(p => p.name === 'Nu')[0]
+    var playlistData = playlists.body.items.filter(p => p.name === 'Nu' && p.owner.id === userID)[0]
     if (!playlistData) {
       playlistData = await spotifyApi.createPlaylist(userID, 'Nu')
       playlistData = playlistData.body
-      console.log('playlistData :', playlistData);
     }
     return playlistData.id
   } catch (err) {
