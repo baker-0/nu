@@ -42,12 +42,33 @@ const authCodeGrant = (authCode) => {
   })
 }
 
+const getSeedTracks = (playlistID) => {
+  return new Promise((resolve, reject) => {
+    spotifyApi.getPlaylistTracks(playlistID).then(
+      function(data) {
+        var oldestFiveTracks = data.body.items.sort((a,b) => {
+          a = new Date(a.added_at)
+          b = new Date(b.added_at)
+          return a>b ? -1 : a<b ? 1 : 0
+        }).slice(-5).map(a => a.track.uri)
+        console.log('oldestFiveTracks :', oldestFiveTracks);
+        resolve(oldestFiveTracks)
+      },
+      function(err) {
+        console.error(err);
+        reject(err)
+      }
+    )
+  })
+  
+}
 const getTopTracks = () => {
   const options = { time_range: 'short_term', limit: 5, offset: 0 }
   return new Promise((resolve, reject) => {
     spotifyApi.getMyTopTracks(options).then(
       function (data) {
         var uris = data.body.items.map(i => i.uri)
+        console.log(data.body.items.map(i => i.name))
         resolve(uris)
       },
       function (err) {
@@ -81,9 +102,9 @@ const getNuPlaylist = async () => {
     var userID = await spotifyApi.getMe()
     userID = userID.body.id
     const playlists = await spotifyApi.getUserPlaylists(userID)
-    var playlistData = playlists.body.items.filter(p => p.name === 'Nu' && p.owner.id === userID)[0]
+    var playlistData = playlists.body.items.filter(p => p.name === 'Nu-testing' && p.owner.id === userID)[0]
     if (!playlistData) {
-      playlistData = await spotifyApi.createPlaylist(userID, 'Nu')
+      playlistData = await spotifyApi.createPlaylist(userID, 'Nu-testing')
       playlistData = playlistData.body
     }
     return playlistData.id
@@ -101,6 +122,7 @@ module.exports = {
   authCodeGrant,
   addTracksToPlaylist,
   getTopTracks,
+  getSeedTracks,
   getRecommendations,
   getNuPlaylist
 }
