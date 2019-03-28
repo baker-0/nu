@@ -18,6 +18,7 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.CLIENT_SECRET,
   redirectUri: redirectUri
 })
+const NuPlaylistName = 'Nu'
 
 const getAuthorizeURL = () => {
   var url = spotifyApi.createAuthorizeURL(scopes, state)
@@ -50,9 +51,10 @@ const getSeedTracks = (playlistID) => {
           a = new Date(a.added_at)
           b = new Date(b.added_at)
           return a>b ? -1 : a<b ? 1 : 0
-        }).slice(-5).map(a => a.track.uri)
-        console.log('oldestFiveTracks :', oldestFiveTracks);
-        resolve(oldestFiveTracks)
+        }).slice(-5)
+        console.log("Using playlist's seed tracks: ");
+        console.log(oldestFiveTracks.map(a => a.track.name))
+        resolve(oldestFiveTracks.map(a => a.track.uri))
       },
       function(err) {
         console.error(err);
@@ -63,11 +65,12 @@ const getSeedTracks = (playlistID) => {
   
 }
 const getTopTracks = () => {
-  const options = { time_range: 'short_term', limit: 5, offset: 0 }
+  const options = { time_range: 'medium_term', limit: 5, offset: 0 }
   return new Promise((resolve, reject) => {
     spotifyApi.getMyTopTracks(options).then(
       function (data) {
         var uris = data.body.items.map(i => i.uri)
+        console.log("User's top tracks: ");
         console.log(data.body.items.map(i => i.name))
         resolve(uris)
       },
@@ -102,9 +105,9 @@ const getNuPlaylist = async () => {
     var userID = await spotifyApi.getMe()
     userID = userID.body.id
     const playlists = await spotifyApi.getUserPlaylists(userID)
-    var playlistData = playlists.body.items.filter(p => p.name === 'Nu-testing' && p.owner.id === userID)[0]
+    var playlistData = playlists.body.items.filter(p => p.name === NuPlaylistName && p.owner.id === userID)[0]
     if (!playlistData) {
-      playlistData = await spotifyApi.createPlaylist(userID, 'Nu-testing')
+      playlistData = await spotifyApi.createPlaylist(userID, NuPlaylistName)
       playlistData = playlistData.body
     }
     return playlistData.id
