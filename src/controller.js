@@ -25,7 +25,7 @@ const authController = (req, res) => {
 
 const testController = (req, res) => {
   res.redirect('/')
-  generateTracks({ limit: 1, popularity: 90 })
+  generateTracks({ limit: 5 })
     .catch(err => console.error(err))
 }
 

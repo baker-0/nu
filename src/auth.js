@@ -14,7 +14,7 @@ const authSpotify = (authCode) => {
   return new Promise((resolve, reject) => {
     const auth = authCodeGrant(authCode)
     auth.then(data => {
-      console.log(data.body)
+      //console.log(data.body)
       resolve(data)
     })
     auth.catch(err => {
