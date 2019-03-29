@@ -28,7 +28,7 @@ const generateSeedTracks = async (playlistId) => {
   if (seedTracks.length < 5) {
     seedTracks = seedTracks.concat(await getTopTracks())
   }
-  return seedTracks.slice(0,5)
+  return seedTracks.slice(0, 5)
 }
 
 /*
@@ -40,7 +40,7 @@ const generateSeedTracks = async (playlistId) => {
 const generateTracks = ({ limit = 20, popularity = 100 } = {}) => {
   return new Promise(async (resolve, reject) => {
     var seedTracks, recommendations, snapshot
-    try { 
+    try {
       const playlistId = await getNuPlaylist()
       seedTracks = await generateSeedTracks()
       recommendations = await getRecommendations(seedTracks, limit, popularity)

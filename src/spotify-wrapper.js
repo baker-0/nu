@@ -46,26 +46,26 @@ const authCodeGrant = (authCode) => {
 const getSeedTracks = (playlistID) => {
   return new Promise((resolve, reject) => {
     spotifyApi.getPlaylistTracks(playlistID).then(
-      function(data) {
-        var oldestFiveTracks = data.body.items.sort((a,b) => {
+      function (data) {
+        var oldestFiveTracks = data.body.items.sort((a, b) => {
           a = new Date(a.added_at)
           b = new Date(b.added_at)
-          return a>b ? -1 : a<b ? 1 : 0
+          return a > b ? -1 : a < b ? 1 : 0
         }).slice(-5)
         console.log("Using playlist's seed tracks: ");
         console.log(oldestFiveTracks.map(a => a.track.name))
         resolve(oldestFiveTracks.map(a => a.track.uri))
       },
-      function(err) {
+      function (err) {
         console.error(err);
         reject(err)
       }
     )
   })
-  
+
 }
 const getTopTracks = () => {
-  const options = { time_range: 'medium_term', limit: 5, offset: 0 }
+  const options = { time_range: 'short_term', limit: 5, offset: 0 }
   return new Promise((resolve, reject) => {
     spotifyApi.getMyTopTracks(options).then(
       function (data) {
