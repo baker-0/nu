@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Login from './components/Login'
-import { Switch, Route } from 'react-router'
+import { Switch, Route, Redirect } from 'react-router'
 
 class App extends Component {
   constructor(props) {
@@ -21,6 +20,14 @@ class App extends Component {
       <div>
         <Switch>
           <Route exact path="/login" component={Login} />
+          <Route exact path="/" render={() => (
+            this.state.isAuthenticated ? (
+              <Redirect to="/dashboard" />
+            ) : (
+                <Redirect to="/login" />
+              )
+          )} />
+
         </Switch>
       </div>
     );
