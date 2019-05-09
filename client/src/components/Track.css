@@ -1,0 +1,26 @@
+.track {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1B2426;
+    margin: 10px;
+}
+
+.coverArt {
+    width: 45vw;
+    margin: 10px;
+}
+
+.wrapper-scroll {
+}
+.trackTitle {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.trackArtist {
+    font-size: 1rem;
+    margin: 10px;
+    white-space: nowrap;
+}
