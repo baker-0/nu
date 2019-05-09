@@ -42,7 +42,7 @@ color: #796155;
 }
 
 #spotifyButton:hover {
-  background-color: #7BAC98;
+  background-color: #E8B137;
 }
 
 span {
@@ -89,12 +89,10 @@ span {
     width: 80vw;
   }
   #spotifyButton {
-    background-color: #AF7F37;
     text-align: center;
     width: 100%;
     height: 13vh;
     font-size: 5.4vw;
-    border-color: #7C6547;
   }
 
   #spotifyLogo {
@@ -125,12 +123,10 @@ span {
     font-size: 2.2rem;
   }
   #spotifyButton {
-    background-color: #AF7F37;
     text-align: center;
     width: 100%;
     height: 13vh;
     font-size: 2.5rem;
-    border-color: #7C6547;
   }
   #spotifyLogo {
     width: 4.5rem;
@@ -161,12 +157,10 @@ span {
     font-size: 3.2vw;
   }
   #spotifyButton {
-    background-color: #AF7F37;
     text-align: center;
     width: 100%;
     height: 22vh;
     font-size: 4.5vw;
-    border-color: #7C6547;
   }
   #spotifyLogo {
     width: 8vw;
