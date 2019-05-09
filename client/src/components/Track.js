@@ -8,7 +8,7 @@ class Track extends Component {
     render() {
         return (
             <div class="track">
-                <img class="coverArt" src="./coverArt.jpg"></img>
+                <img class="coverArt" src="./coverArt.jpg" alt="cover art"></img>
                 <div class="wrapper-scroll">
                     <p class="trackTitle">Celebrate Life</p>
                 </div>
