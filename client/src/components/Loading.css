@@ -1,0 +1,15 @@
+#loading-page {
+  background-color: #1F202D;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #E8B137;
+  font-size: 1rem;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#loading-page #title {
+  flex: 0 1 90vh;
+}

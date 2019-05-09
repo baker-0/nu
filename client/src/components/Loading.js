@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import './LandingPage.css';
+import './Loading.css';
 import Spinner from './Spinner';
 const queryString = require('query-string');
 
-class Connected extends Component {
+class Loading extends Component {
 
   constructor(props) {
     super(props)
@@ -14,12 +14,11 @@ class Connected extends Component {
   render() {
     return (
       <div id='landing-page'>
-        <a href='/'><span id='title'>Nu</span></a>
+        <a className='animated bounceInLeft' href='/'><span id='title'>Nu</span></a>
         <Spinner></Spinner>
         <div id='callToAction'>
           <div>
             <p>Connecting to Spotify</p>
-          <img src="./spotify.png" id="spotifyLogo" alt="Spotify"></img>
           </div>
         </div>
       </div>
@@ -27,4 +26,4 @@ class Connected extends Component {
   }
 }
 
-export default Connected;
+export default Loading;

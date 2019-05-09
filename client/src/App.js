@@ -3,7 +3,7 @@ import './App.css';
 import LandingPage from './components/LandingPage'
 import Dashboard from './components/Dashboard'
 import { Switch, Route, Redirect } from 'react-router'
-import Connected from './components/Connected';
+import Loading from './components/Loading';
 
 const initialRedirect = () => {
   if (localStorage.getItem('spotify-auth')) { // User already authenticated.
@@ -35,9 +35,9 @@ class App extends Component {
         <Switch>
           <Route exact path='/' render={initialRedirect} />
           <Route exact path='/login' component={LandingPage} />
-          <Route exact path='/authorized' 
-          render= {(props) => <Connected {...props} authHandler = {this.authHandler} />} />
-          <Route exact path='/dashboard' component = {Dashboard} />
+          <Route exact path='/authorized'
+            render={(props) => <Loading {...props} authHandler={this.authHandler} />} />
+          <Route exact path='/dashboard' component={Dashboard} />
         </Switch>
       </div>
     );
