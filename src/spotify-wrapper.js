@@ -10,7 +10,7 @@ const scopes =
     'playlist-read-private',
     'playlist-modify-private',
     'playlist-modify-public']
-const redirectUri = 'http://localhost:8888/auth'
+const redirectUri = 'http://localhost:3000/authorized'
 const state = 'newboy'
 
 const spotifyApi = new SpotifyWebApi({
