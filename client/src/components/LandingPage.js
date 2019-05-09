@@ -10,7 +10,7 @@ class LandingPage extends Component {
       <div id='landing-page'>
         <p id='title' className='animated fadeInDown'><span id='titleLeft'>N</span>u</p>
         <div id='callToAction'>
-          <p className='animated fadeInLeft'>You're <span className='highlight'>one</span> step away from
+          <p id="actionText" className='animated fadeInLeft'>You're <span className='highlight'>one</span> step away from
             <span role='img' aria-label='Fire' id='fire'>
               <span id='fire1' className='animated lightSpeedIn'>🔥</span>
               <span id='fire2' className='animated lightSpeedIn'>🔥</span>

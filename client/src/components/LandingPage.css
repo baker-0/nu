@@ -38,6 +38,7 @@ color: #796155;
   height: 10vh;
   font-size: 6vw;
   color: #1F202D;
+  margin: 1rem;
 }
 
 #spotifyButton:hover {
