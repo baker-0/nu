@@ -1,33 +1,25 @@
 import React, { Component } from 'react';
 import './App.css';
-import Login from './components/Login'
+import LandingPage from './components/LandingPage'
 import { Switch, Route, Redirect } from 'react-router'
 
+const initialRedirect = () => {
+  if (localStorage.getItem('spotify-auth')) { // User already authenticated.
+    return <Redirect to="/dashboard" />
+  }
+  else { // New user.
+    return (<Redirect to="/login" />)
+  }
+}
+
 class App extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      isAuthenticated: false
-    };
-  }
-
-  userHasAuthenticated = authenticated => {
-    this.setState({ isAuthenticated: authenticated });
-  }
   render() {
     return (
       <div>
         <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/" render={() => (
-            this.state.isAuthenticated ? (
-              <Redirect to="/dashboard" />
-            ) : (
-                <Redirect to="/login" />
-              )
-          )} />
-
+          <Route exact path='/' render={initialRedirect} />
+          <Route exact path='/login' component={LandingPage} />
         </Switch>
       </div>
     );
