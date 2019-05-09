@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/baker-0/Nu#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "spotify-web-api-node": "^4.0.0"
