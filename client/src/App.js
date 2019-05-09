@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import LandingPage from './components/LandingPage'
+import Dashboard from './components/Dashboard'
 import { Switch, Route, Redirect } from 'react-router'
 
 const initialRedirect = () => {
@@ -20,6 +21,7 @@ class App extends Component {
         <Switch>
           <Route exact path='/' render={initialRedirect} />
           <Route exact path='/login' component={LandingPage} />
+          <Route exact path='/dashboard' component={Dashboard} />
         </Switch>
       </div>
     );
