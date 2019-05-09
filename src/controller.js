@@ -10,7 +10,7 @@ const { getAuthURL, authSpotify } = require('./auth.js')
 
 const loginController = (req, res) => {
   var authorizeURL = getAuthURL()
-  res.redirect(authorizeURL)
+  res.json({ 'authURL': authorizeURL })
 }
 
 const authController = (req, res) => {
