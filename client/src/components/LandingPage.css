@@ -40,6 +40,9 @@ color: #796155;
   color: #1F202D;
 }
 
+#spotifyButton:hover {
+  background-color: #7BAC98;
+}
 
 span {
   display: inline-block;
