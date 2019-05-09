@@ -8,7 +8,8 @@
     height: 100vh;
   }
 
-#header {
+#actionText {
+    margin: 1rem;
 }
 
 #header-content {
@@ -33,7 +34,7 @@
 }
 
 #topTracks {
-    flex: 0 1 70vh;
+    flex: 0 1 60vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -41,7 +42,6 @@
     overflow: scroll;
 }
 button {
-    
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -53,4 +53,8 @@ button {
     height: 10vh;
     font-size: 6vw;
     color: #1F202D;
+  }
+
+  a { 
+      color: inherit;
   }

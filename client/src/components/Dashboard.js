@@ -11,7 +11,7 @@ class Dashboard extends Component {
             <div id='dashboard'>
                 <div id="header">
                     <div id="header-content">
-                        <p id='title' className='animated bounceInDown'>Nu</p>
+                        <a href='/'><span id='title' className='animated bounceInDown'>Nu</span></a>
                     </div>
                 </div>
                 <div id='content'>
@@ -20,7 +20,6 @@ class Dashboard extends Component {
                         <Track></Track>
                         <Track></Track>
                         <Track></Track>
-
                     </div>
                     <button>Generate recommendations</button>
                 </div>
