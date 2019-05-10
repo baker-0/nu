@@ -11,14 +11,17 @@ const { loginController,
   testController } = require('./controller.js')
 const cors = require('cors')
 const app = express()
+
 const corsOptions = {
   origin: true
 }
+
 app.use(express.static('public'))
+app.use(express.json())
+app.use(cors())
+app.get('/login', loginController)
 
-app.get('/login', cors(corsOptions), loginController)
-
-app.get('/auth', authController)
+app.post('/auth', authController)
 
 app.get('/test', testController)
 
