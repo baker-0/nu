@@ -9,6 +9,17 @@ class Loading extends Component {
     super(props)
     let response = queryString.parse(props.location.search);
     console.log('response :', response);
+    fetch('http://localhost:8888/auth', {
+      method: 'POST',
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      referrer: "no-referrer",
+      body: JSON.stringify(response)
+    })
+      .then(res => console.log(res));
+
     props.authHandler(response.code);
   }
   render() {
