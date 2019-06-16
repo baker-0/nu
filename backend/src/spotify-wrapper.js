@@ -3,15 +3,15 @@ spotify-wrapper.js
 
 Wrapper for the wrapper of the Spotify API
 */
-
 const SpotifyWebApi = require('spotify-web-api-node')
 const scopes =
   ['user-top-read',
     'playlist-read-private',
     'playlist-modify-private',
     'playlist-modify-public']
-const redirectUri = 'http://localhost:3000/authorized'
-const state = 'newboy'
+const HOST = process.env.HOST
+const redirectUri = HOST + '/auth/redirect'
+const state = 'nu'
 
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.CLIENT_ID,
