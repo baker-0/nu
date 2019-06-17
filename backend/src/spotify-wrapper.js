@@ -38,7 +38,6 @@ const authCodeGrant = (authCode) => {
       },
       function (err) {
         reject(err)
-        console.log('Something went wrong!', err)
       })
   })
 }
