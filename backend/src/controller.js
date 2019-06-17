@@ -14,13 +14,19 @@ const auth = (req, res) => {
 }
 
 const redirect = (req, res) => {
-  const auth = authAPI.authSpotify(req.query.code)
-  auth.then((data) => res.json({
-    'auth': data
-  }))
-  auth.catch(() => {
-    res.status(401).send('get good')
-  })
+  // redirect user to spotify authorization if code query undefined
+  if (req.query.code === undefined) {
+    return res.redirect('/auth/spotify')
+  }
+  try {
+    const auth = authAPI.authSpotify(req.query.code)
+    auth.then((data) => res.json(data))
+    auth.catch(() => {
+      res.status(401).send('get good')
+    })
+  } catch (err) {
+    res.status(401).send(err)
+  }
 }
 
 module.exports = { auth, redirect }
