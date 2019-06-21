@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    container_name: nu-app
+    restart: always
+    build: .
+    ports:
+      - '8888:8888'
+    links:
+      - db
+    volumes:
+      - ./:/usr/src/app/
+  db:
+    image: mongo
+    ports:
+      - '27017:27017'
