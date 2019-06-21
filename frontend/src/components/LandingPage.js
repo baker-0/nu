@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import './LandingPage.css';
+const HOST = process.env.REACT_APP_HOST;
 
+console.log("HOST: ", HOST);
 class LandingPage extends Component {
   handleSubmit = () => {
-    fetch('http://localhost:8888/login') // Get Spotify auth URL.
-      .then(res => res.json())
-      .then(res => window.location = res.authURL) // Open Spotify auth in a new tab/window.
-      .catch(err => console.error("Err: " + err))
+    window.location.replace(HOST + "/auth/spotify")
   }
   render() {
     return (
