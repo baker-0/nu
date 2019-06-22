@@ -12,6 +12,6 @@ services:
     volumes:
       - ./:/usr/src/app/
   db:
-    image: mongo
+    image: mongo:4.0.10
     ports:
       - '27017:27017'
