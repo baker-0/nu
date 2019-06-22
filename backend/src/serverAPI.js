@@ -6,11 +6,44 @@ Uses auth recommendation services
 */
 
 const authAPI = require('./auth.js')
-const jwt = require('express-jwt')
 const jwtSign = require('jsonwebtoken')
 const dbAPI = require('./dbAPI')
+const spotifyAPI = require('./spotify-wrapper')
 const webURL = process.env.WEB_URL
 const apiURL = process.env.API_URL
+
+const setUserTokens = (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let user = await dbAPI.findUser(userId)
+      console.log('user.access_token :', user.access_token)
+      console.log('user.refresh_token :', user.refresh_token)
+
+      spotifyAPI.setAccessToken(user.access_token)
+      spotifyAPI.setRefreshToken(user.refresh_token)
+      resolve(user)
+    } catch (err) {
+      console.log(err)
+      reject(err)
+    }
+  })
+}
+
+const isAuthenticated = (req, res, next) => {
+  if (req.user) return next()
+  res.sendStatus(401)
+}
+
+const topTracks = async (req, res) => {
+  try {
+    let user = await setUserTokens(req.user.userID)
+    let tracks = await spotifyAPI.getTopTracks('short_term')
+    console.log(tracks)
+    res.status(200).json(tracks)
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 const auth = (req, res) => {
   let authorizeURL = authAPI.getAuthURL()
@@ -19,7 +52,7 @@ const auth = (req, res) => {
 
 const welcome = (req, res) => {
   if (req.token) {
-    res.redirect(`${webURL}/dashboard?token=${req.token}`)
+    res.redirect(`${webURL}/authorized?token=${req.token}`)
   } else {
     res.redirect('/auth/spotify')
   }
@@ -53,4 +86,4 @@ const redirect = (req, res, next) => {
   }
 }
 
-module.exports = { auth, redirect, welcome }
+module.exports = { auth, redirect, welcome, isAuthenticated, topTracks }

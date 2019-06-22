@@ -20,6 +20,14 @@ const spotifyApi = new SpotifyWebApi({
 })
 const NuPlaylistName = 'Nu'
 
+const setAccessToken = (token) => {
+  spotifyApi.setAccessToken(token)
+}
+
+const setRefreshToken = (token) => {
+  spotifyApi.setRefreshToken(token)
+}
+
 const getAuthorizeURL = () => {
   var url = spotifyApi.createAuthorizeURL(scopes, state)
   return url
@@ -63,15 +71,18 @@ const getSeedTracks = (playlistID) => {
   })
 
 }
-const getTopTracks = () => {
-  const options = { time_range: 'short_term', limit: 5, offset: 0 }
+const getTopTracks = (timeRange, limit, offset) => {
+  const options = {
+    time_range: timeRange || 'short_term',
+    limit: limit || 5,
+    offset: offset || 0
+  }
   return new Promise((resolve, reject) => {
     spotifyApi.getMyTopTracks(options).then(
       function (data) {
-        var uris = data.body.items.map(i => i.uri)
         console.log("User's top tracks: ");
         console.log(data.body.items.map(i => i.name))
-        resolve(uris)
+        resolve(data.body.items)
       },
       function (err) {
         console.log('Couldn\'t fetch your top tracks!', err)
@@ -120,6 +131,8 @@ const addTracksToPlaylist = (playlist, tracks) => {
 }
 
 module.exports = {
+  setAccessToken,
+  setRefreshToken,
   getAuthorizeURL,
   authCodeGrant,
   addTracksToPlaylist,
