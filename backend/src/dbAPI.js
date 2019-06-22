@@ -20,4 +20,17 @@ const insertUser = (userCredentials) => {
   })
 }
 
-module.exports = { insertUser }
+const findUser = (userId) => {
+  return new Promise((resolve, reject) => {
+    UserModel.findById(userId, (err, user) => {
+      if (err) {
+        reject(err)
+        return
+      }
+      console.log('found user:', user)
+      resolve(user)
+    })
+  })
+}
+
+module.exports = { insertUser, findUser }
