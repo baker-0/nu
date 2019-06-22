@@ -8,8 +8,8 @@ RUN npm install
 
 COPY . ../
 
-EXPOSE 3000
+EXPOSE 8888 3000
   
-WORKDIR /usr/src/app/backend
+WORKDIR /usr/src/app/
 
 CMD ["npm", "start"]
