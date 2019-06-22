@@ -16,8 +16,6 @@ const setUserTokens = (userId) => {
   return new Promise(async (resolve, reject) => {
     try {
       let user = await dbAPI.findUser(userId)
-      console.log('user.access_token :', user.access_token)
-      console.log('user.refresh_token :', user.refresh_token)
 
       spotifyAPI.setAccessToken(user.access_token)
       spotifyAPI.setRefreshToken(user.refresh_token)
@@ -38,10 +36,10 @@ const topTracks = async (req, res) => {
   try {
     let user = await setUserTokens(req.user.userID)
     let tracks = await spotifyAPI.getTopTracks('short_term')
-    console.log(tracks)
     res.status(200).json(tracks)
   } catch (err) {
     console.log(err)
+    res.sendStatus(500)
   }
 }
 
