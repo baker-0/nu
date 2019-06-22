@@ -1,16 +1,23 @@
 version: '3'
 services:
-  web:
-    container_name: nu-app
+  backend:
+    container_name: nu-backend
     restart: always
-    build: .
+    build: ./backend
     ports:
       - '8888:8888'
-      - '3000:3000'
     links:
       - db
     volumes:
-      - ./:/usr/src/app/
+      - ./backend:/usr/src/app/
+  frontend:
+    container_name: nu-frontend
+    restart: always
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/usr/src/app/
   db:
     image: mongo:4.0.10
     ports:
