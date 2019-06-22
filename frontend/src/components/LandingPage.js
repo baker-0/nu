@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './LandingPage.css';
-const HOST = process.env.REACT_APP_HOST;
+const apiURL = process.env.REACT_APP_API_URL;
+const webURL = process.env.REACT_APP_WEB_URL;
 
-console.log("HOST: ", HOST);
 class LandingPage extends Component {
   handleSubmit = () => {
-    window.location.replace(HOST + "/auth/spotify")
+      window.location.replace(apiURL + "/auth/spotify")
   }
   render() {
     return (

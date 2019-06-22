@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import './Loading.css';
 import Spinner from './Spinner';
 const queryString = require('query-string');
-
+const HOST = process.env.REACT_APP_API_URL;
 class Loading extends Component {
-
   constructor(props) {
     super(props)
     let response = queryString.parse(props.location.search);
     console.log('response :', response);
-    fetch('http://localhost:8888/auth', {
+    fetch(`${HOST}/auth`, {
       method: 'POST',
       mode: "cors",
       headers: {

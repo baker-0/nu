@@ -5,11 +5,12 @@ Handles app routes.
 Uses auth recommendation services
 */
 
-const generateTracks = require('./recommendations')
 const authAPI = require('./auth.js')
 const jwt = require('express-jwt')
 const jwtSign = require('jsonwebtoken')
 const dbAPI = require('./dbAPI')
+const webURL = process.env.WEB_URL
+const apiURL = process.env.API_URL
 
 const auth = (req, res) => {
   let authorizeURL = authAPI.getAuthURL()
@@ -18,15 +19,16 @@ const auth = (req, res) => {
 
 const welcome = (req, res) => {
   if (req.token) {
-    res.redirect(`/dashboard?token=${req.token}`)
+    res.redirect(`${webURL}/dashboard?token=${req.token}`)
   } else {
     res.redirect('/auth/spotify')
   }
 }
+
 const redirect = (req, res, next) => {
-  // redirect user to spotify authorization if code query undefined
+  // redirect request to spotify authorization if code query undefined
   if (req.query.code === undefined) {
-    return res.redirect('/auth/spotify')
+    return res.redirect(`${apiURL}/auth/spotify`)
   }
 
   try { // authenticate spotify

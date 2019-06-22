@@ -9,7 +9,7 @@ const scopes =
     'playlist-read-private',
     'playlist-modify-private',
     'playlist-modify-public']
-const HOST = process.env.HOST
+const HOST = process.env.API_URL
 const redirectUri = HOST + '/auth/redirect'
 const state = 'nu'
 
