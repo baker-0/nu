@@ -6,4 +6,6 @@ const userSchema = new Schema({
   refresh_token: String
 })
 
-module.exports = userSchema
+const UserModel = mongoose.model('User', userSchema)
+
+module.exports = UserModel

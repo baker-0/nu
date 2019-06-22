@@ -1,16 +1,5 @@
 const mongoose = require('mongoose')
-const userSchema = require('./user')
-
-// Connect to MongoDB
-mongoose
-  .connect(
-    'mongodb://db:27017/mongo',
-    { useNewUrlParser: true }
-  )
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err))
-
-const UserModel = mongoose.model('Person', userSchema)
+const UserModel = require('./user')
 
 const insertUser = (userCredentials) => {
   return new Promise((resolve, reject) => {
