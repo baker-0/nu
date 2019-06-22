@@ -5,7 +5,9 @@ const insertUser = (userCredentials) => {
   return new Promise((resolve, reject) => {
     let newUser = new UserModel({
       access_token: userCredentials.access_token,
-      refresh_token: userCredentials.refresh_token
+      refresh_token: userCredentials.refresh_token,
+      expires_in: userCredentials.expires_in,
+      refresh_date: new Date()
     })
 
     newUser.save((err, user) => {
