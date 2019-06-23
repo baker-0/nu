@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './Loading.css';
 import Spinner from './Spinner';
 const queryString = require('query-string');
-const HOST = process.env.REACT_APP_API_URL;
+const apiUrl= process.env.REACT_APP_API_URL;
+const webUrl = process.env.REACT_APP_WEB_URL
 
 class Loading extends Component {
   componentDidMount() {
@@ -11,12 +12,16 @@ class Loading extends Component {
       localStorage.setItem('spotify-auth', query.token);
     }
 
-    fetch(`${HOST}/user/top/tracks`, {
+    fetch(`${apiUrl}/user/top/tracks`, {
       headers: new Headers({
         'Authorization': `Bearer ${localStorage.getItem('spotify-auth')}`
       })
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 401)
+          window.location.replace(webUrl + "/login")
+        return res.json()
+      })
       .then(res => console.log("TOP TRACKS:", res))
   }
   render() {
