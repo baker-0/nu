@@ -5,20 +5,45 @@ Handles app routes.
 Uses auth recommendation services
 */
 
-const authAPI = require('./auth.js')
 const jwtSign = require('jsonwebtoken')
 const dbAPI = require('./dbAPI')
 const spotifyAPI = require('./spotify-wrapper')
 const webURL = process.env.WEB_URL
 const apiURL = process.env.API_URL
 
+const refreshUserToken = (user) => {
+  return new Promise(async (resolve, reject) => {
+    console.log('refreshUserToken:', user)
+    try {
+      let tokenObj = await spotifyAPI.refreshAccessToken()
+      let updatedUser = await dbAPI.findByIdAndUpdate(user._id, {
+        'access_token': tokenObj.access_token,
+        'expires_in': tokenObj.expires_in,
+        'refresh_date': new Date()
+      })
+      console.log('in refreshUserToken, updatedUser is:', updatedUser)
+      resolve(updatedUser)
+    } catch (err) {
+      reject(err)
+      console.log(err)
+    }
+  })
+}
+
 const setUserTokens = (userId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let user = await dbAPI.findUser(userId)
-
-      spotifyAPI.setAccessToken(user.access_token)
+      let user = await dbAPI.findById(userId)
       spotifyAPI.setRefreshToken(user.refresh_token)
+
+      // Refresh access_token if it is 30 seconds (or less) away from expiring.
+      let tokenAge = (new Date() - user.refresh_date) / 1000
+      if (tokenAge >= user.expires_in - 30) {
+        user = await refreshUserToken(user)
+      }
+
+      // set access_token after ensuring validity
+      spotifyAPI.setAccessToken(user.access_token)
       resolve(user)
     } catch (err) {
       console.log(err)
@@ -33,18 +58,26 @@ const isAuthenticated = (req, res, next) => {
 }
 
 const topTracks = async (req, res) => {
+  const options = {
+    time_range: 'short_term',
+    limit: 5,
+    offset: 0
+  }
   try {
-    let user = await setUserTokens(req.user.userID)
-    let tracks = await spotifyAPI.getTopTracks('short_term')
+    await setUserTokens(req.user.userID)
+    let tracks = await spotifyAPI.getMyTopTracks(options)
     res.status(200).json(tracks)
   } catch (err) {
     console.log(err)
-    res.sendStatus(500)
+    res.sendStatus(401)
   }
 }
 
 const auth = (req, res) => {
-  let authorizeURL = authAPI.getAuthURL()
+  const scopes =
+  ['user-top-read']
+  const state = 'new'
+  let authorizeURL = spotifyAPI.createAuthorizeURL(scopes, state)
   res.redirect(authorizeURL)
 }
 
@@ -61,9 +94,8 @@ const redirect = (req, res, next) => {
   if (req.query.code === undefined) {
     return res.redirect(`${apiURL}/auth/spotify`)
   }
-
   try { // authenticate spotify
-    const auth = authAPI.authSpotify(req.query.code)
+    const auth = spotifyAPI.authorizationCodeGrant(req.query.code)
     auth.then(async (data) => {
       try { // insert user into DB
         const userID = (await dbAPI.insertUser(data.body))._id
