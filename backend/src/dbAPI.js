@@ -22,12 +22,11 @@ const insertUser = (userCredentials) => {
   })
 }
 
-const findUser = (userId) => {
+const findById = (userId) => {
   return new Promise((resolve, reject) => {
     UserModel.findById(userId, (err, user) => {
-      if (err) {
-        reject(err)
-        return
+      if (err || user === null) {
+        return reject(err || 'User not found!')
       }
       console.log('found user:', user)
       resolve(user)
@@ -35,4 +34,16 @@ const findUser = (userId) => {
   })
 }
 
-module.exports = { insertUser, findUser }
+const findByIdAndUpdate = (userId, update) => {
+  return new Promise((resolve, reject) => {
+    UserModel.findByIdAndUpdate(userId, update, { useFindAndModify: false }, (data) => {
+      if (data) {
+        console.log('Updated user:', data)
+        return resolve(data)
+      }
+      reject(new Error(`Could not find user with id "${userId}"`))
+    })
+  })
+}
+
+module.exports = { insertUser, findById, findByIdAndUpdate }
