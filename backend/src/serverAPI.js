@@ -12,8 +12,8 @@ const webURL = process.env.WEB_URL
 const apiURL = process.env.API_URL
 
 const refreshUserToken = (user) => {
+  console.log('in refreshUserToken()')
   return new Promise(async (resolve, reject) => {
-    console.log('refreshUserToken:', user)
     try {
       let tokenObj = await spotifyAPI.refreshAccessToken()
       let updatedUser = await dbAPI.findByIdAndUpdate(user._id, {
@@ -31,6 +31,7 @@ const refreshUserToken = (user) => {
 }
 
 const setUserTokens = (userId) => {
+  console.log('in setUserTokens()')
   return new Promise(async (resolve, reject) => {
     try {
       let user = await dbAPI.findById(userId)
@@ -53,11 +54,13 @@ const setUserTokens = (userId) => {
 }
 
 const isAuthenticated = (req, res, next) => {
+  console.log('in isAuthenticated()')
   if (req.user) return next()
   res.sendStatus(401)
 }
 
 const topTracks = async (req, res) => {
+  console.log('in /user/top/tracks')
   const options = {
     time_range: 'short_term',
     limit: 5,
@@ -74,6 +77,7 @@ const topTracks = async (req, res) => {
 }
 
 const auth = (req, res) => {
+  console.log('in /auth')
   const scopes =
   ['user-top-read']
   const state = 'new'
@@ -82,6 +86,7 @@ const auth = (req, res) => {
 }
 
 const welcome = (req, res) => {
+  console.log('in welcome()')
   if (req.token) {
     res.redirect(`${webURL}/authorized?token=${req.token}`)
   } else {
@@ -90,6 +95,7 @@ const welcome = (req, res) => {
 }
 
 const redirect = (req, res, next) => {
+  console.log('in /auth/redirect')
   // redirect request to spotify authorization if code query undefined
   if (req.query.code === undefined) {
     return res.redirect(`${apiURL}/auth/spotify`)
