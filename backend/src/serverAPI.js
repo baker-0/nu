@@ -16,16 +16,18 @@ const refreshUserToken = (user) => {
   return new Promise(async (resolve, reject) => {
     try {
       let tokenObj = await spotifyAPI.refreshAccessToken()
+      if (tokenObj.statusCode !== 200) {
+        throw new Error('Refresh token not valid')
+      }
       let updatedUser = await dbAPI.findByIdAndUpdate(user._id, {
-        'access_token': tokenObj.access_token,
-        'expires_in': tokenObj.expires_in,
+        'access_token': tokenObj.body.access_token,
+        'expires_in': tokenObj.body.expires_in,
         'refresh_date': new Date()
       })
       console.log('in refreshUserToken, updatedUser is:', updatedUser)
       resolve(updatedUser)
     } catch (err) {
       reject(err)
-      console.log(err)
     }
   })
 }
@@ -47,7 +49,6 @@ const setUserTokens = (userId) => {
       spotifyAPI.setAccessToken(user.access_token)
       resolve(user)
     } catch (err) {
-      console.log(err)
       reject(err)
     }
   })
@@ -79,7 +80,7 @@ const topTracks = async (req, res) => {
 const auth = (req, res) => {
   console.log('in /auth')
   const scopes =
-  ['user-top-read']
+    ['user-top-read']
   const state = 'new'
   let authorizeURL = spotifyAPI.createAuthorizeURL(scopes, state)
   res.redirect(authorizeURL)
