@@ -12,6 +12,10 @@ app.get('/user/top/tracks',
   jwt({ secret: process.env.JWT_SECRET }),
   serverAPI.topTracks)
 
+app.get('/me',
+  jwt({ secret: process.env.JWT_SECRET }),
+  serverAPI.getUser)
+
 // Client browser should be directed to this endpoint to login using spotify
 app.get('/auth/spotify', serverAPI.auth)
 

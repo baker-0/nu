@@ -11,6 +11,17 @@ const spotifyAPI = require('./spotify-wrapper')
 const webURL = process.env.WEB_URL
 const apiURL = process.env.API_URL
 
+const getUser = async (req, res) => {
+  try {
+    await setUserTokens(req.user.userID)
+    let tracks = await spotifyAPI.getMe()
+    res.status(200).json(tracks)
+  } catch (err) {
+    console.log(err)
+    res.sendStatus(401)
+  }
+}
+
 const refreshUserToken = (user) => {
   console.log('in refreshUserToken()')
   return new Promise(async (resolve, reject) => {
@@ -63,8 +74,8 @@ const isAuthenticated = (req, res, next) => {
 const topTracks = async (req, res) => {
   console.log('in /user/top/tracks')
   const options = {
-    time_range: 'short_term',
-    limit: 5,
+    time_range: req.query.time_range || 'medium_term',
+    limit: 50,
     offset: 0
   }
   try {
@@ -89,7 +100,7 @@ const auth = (req, res) => {
 const welcome = (req, res) => {
   console.log('in welcome()')
   if (req.token) {
-    res.redirect(`${webURL}/authorized?token=${req.token}`)
+    res.redirect(`${webURL}/dashboard?token=${req.token}`)
   } else {
     res.redirect('/auth/spotify')
   }
@@ -123,4 +134,4 @@ const redirect = (req, res, next) => {
   }
 }
 
-module.exports = { auth, redirect, welcome, isAuthenticated, topTracks }
+module.exports = { auth, redirect, welcome, isAuthenticated, topTracks, getUser }
