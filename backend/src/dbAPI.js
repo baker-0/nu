@@ -26,7 +26,7 @@ const findById = (userId) => {
   return new Promise((resolve, reject) => {
     UserModel.findById(userId, (err, user) => {
       if (err || user === null) {
-        return reject(err || 'User not found!')
+        return reject(err || `User ${userId} not found!`)
       }
       console.log('found user:', user)
       resolve(user)
