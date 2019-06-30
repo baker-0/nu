@@ -30,12 +30,12 @@ const refreshUserToken = (user) => {
       if (tokenObj.statusCode !== 200) {
         throw new Error('Refresh token not valid')
       }
-      let updatedUser = await dbAPI.findByIdAndUpdate(user._id, {
+      let updatedUser = await dbAPI.insertUser(user.id, {
         'access_token': tokenObj.body.access_token,
         'expires_in': tokenObj.body.expires_in,
         'refresh_date': new Date()
       })
-      console.log('in refreshUserToken, updatedUser is:', updatedUser)
+      console.log('refreshUserToken: updatedUser ', updatedUser)
       resolve(updatedUser)
     } catch (err) {
       reject(err)
@@ -100,37 +100,49 @@ const auth = (req, res) => {
 const welcome = (req, res) => {
   console.log('in welcome()')
   if (req.token) {
-    res.redirect(`${webURL}/dashboard?token=${req.token}`)
+    res.redirect(`${webURL}/authorized?token=${req.token}`)
   } else {
     res.redirect('/auth/spotify')
   }
 }
 
-const redirect = (req, res, next) => {
+// Takes Spotify auth token
+// Authenticates user, then inserts or updates user into DB.
+// Returns a promise that, if successful, resolves into an
+// auth JWT to be returned to the user.
+const authSpotify = (authToken) => {
+  return new Promise((resolve, reject) => {
+    const auth = spotifyAPI.authorizationCodeGrant(authToken)
+    auth.then(async (data) => {
+      try { // insert user into DB
+        spotifyAPI.setAccessToken(data.body.access_token)
+        let userId = (await spotifyAPI.getMe()).body.id
+        let user = await dbAPI.insertUser(userId, data.body)
+
+        const payload = { 'userID': user.id }
+        const token = jwtSign.sign(payload, process.env.JWT_SECRET)
+        resolve(token)
+      } catch (err) {
+        reject(new Error({ 'status': 500, 'msg': err }))
+      }
+    })
+    auth.catch((err) => {
+      reject(new Error({ 'status': 401, 'msg': err }))
+    })
+  })
+}
+
+const redirect = async (req, res, next) => {
   console.log('in /auth/redirect')
   // redirect request to spotify authorization if code query undefined
   if (req.query.code === undefined) {
     return res.redirect(`${apiURL}/auth/spotify`)
   }
   try { // authenticate spotify
-    const auth = spotifyAPI.authorizationCodeGrant(req.query.code)
-    auth.then(async (data) => {
-      try { // insert user into DB
-        const userID = (await dbAPI.insertUser(data.body))._id
-        const payload = { 'userID': userID }
-        const token = jwtSign.sign(payload, process.env.JWT_SECRET)
-        req.token = token
-        next()
-      } catch (err) {
-        console.log(err)
-        res.status(500).send(err)
-      }
-    })
-    auth.catch(() => {
-      res.status(401).send('get good')
-    })
+    req.token = await authSpotify(req.query.code)
+    next()
   } catch (err) {
-    res.status(401).send(err)
+    res.status(err.status).send(err.msg)
   }
 }
 

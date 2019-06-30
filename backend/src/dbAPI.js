@@ -1,30 +1,34 @@
 const mongoose = require('mongoose')
 const UserModel = require('./user')
 
-const insertUser = (userCredentials) => {
+// Inserts user into DB.
+// If user already exists in DB, update.
+const insertUser = (userId, data) => {
   return new Promise((resolve, reject) => {
-    let newUser = new UserModel({
-      access_token: userCredentials.access_token,
-      refresh_token: userCredentials.refresh_token,
-      expires_in: userCredentials.expires_in,
+    const query = { id: userId }
+    const update = {
+      id: userId,
       refresh_date: new Date()
-    })
+    }
+    if (data.access_token) update['access_token'] = data.access_token
+    if (data.refresh_token) update['refresh_token'] = data.refresh_token
+    if (data.expires_in) update['expires_in'] = data.expires_in
 
-    newUser.save((err, user) => {
-      if (err) {
-        console.log(err)
-        reject(err)
-      } else {
-        console.log('following user was saved:', user)
-        resolve(user)
-      }
+    const options = { upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false }
+
+    // Find the document
+    UserModel.findOneAndUpdate(query, update, options, (error, result) => {
+      if (error) return reject(error)
+      resolve(result)
+
+      console.log('following user was saved:', result)
     })
   })
 }
 
 const findById = (userId) => {
   return new Promise((resolve, reject) => {
-    UserModel.findById(userId, (err, user) => {
+    UserModel.findOne({ id: userId }, (err, user) => {
       if (err || user === null) {
         return reject(err || `User ${userId} not found!`)
       }
@@ -34,16 +38,4 @@ const findById = (userId) => {
   })
 }
 
-const findByIdAndUpdate = (userId, update) => {
-  return new Promise((resolve, reject) => {
-    UserModel.findByIdAndUpdate(userId, update, { useFindAndModify: false }, (data) => {
-      if (data) {
-        console.log('Updated user:', data)
-        return resolve(data)
-      }
-      reject(new Error(`Could not find user with id "${userId}"`))
-    })
-  })
-}
-
-module.exports = { insertUser, findById, findByIdAndUpdate }
+module.exports = { insertUser, findById }
