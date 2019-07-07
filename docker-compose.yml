@@ -1,15 +1,23 @@
 version: '3'
 services:
-  backend:
-    container_name: nu-backend
+  api:
+    container_name: nu-api
     restart: always
-    build: ./backend
+    build: ./backend/api
     ports:
       - '8888:8888'
     links:
       - db
     volumes:
-      - ./backend:/usr/src/app/
+      - ./backend/api:/usr/src/app/
+  scrobble-service:
+    container_name: nu-scrobbler
+    restart: always
+    build: ./backend/services/SpotifyScrobbler
+    links:
+      - db
+    volumes:
+      - ./backend/services/SpotifyScrobbler:/usr/src/app/
   frontend:
     container_name: nu-frontend
     restart: always
