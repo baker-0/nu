@@ -1,0 +1,18 @@
+{
+  "name": "SpotifyScrobbler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Scrobbler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "mongoose": "^5.6.2",
+    "spotify-web-api-node": "^4.0.0"
+  }
+}
